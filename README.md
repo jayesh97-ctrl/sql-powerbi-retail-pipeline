@@ -7,7 +7,7 @@ An end-to-end data pipeline that takes a real, messy transaction-level dataset f
 ## The pipeline
 
 ```
-raw CSV (541,910 rows, 2010–2011)
+raw CSV (541,909 rows, 2010–2011)
    │  scripts/load_raw.py  (ingest + normalise date format)
    ▼
 raw_online_retail            (SQLite, untouched except typed dates)
@@ -43,7 +43,7 @@ data/star_schema/*.csv  →  Power BI (see docs/powerbi_setup_guide.md)
 - **135,080 rows (~25%)** had no `CustomerID` — kept and flagged (`is_guest_order`) rather than dropped, since deleting them would understate revenue by a quarter.
 - **9,288 rows** were cancellations (`InvoiceNo` starting with `C`) — flagged, not deleted, since a return is a real business event.
 - **~2,900 rows** were postage/fees/adjustments (`POST`, `DOT`, `BANK CHARGES`, etc.) mixed into the product column — flagged so they don't appear as a "top-selling SKU" by volume alone.
-- **4,879 exact duplicate rows** removed.
+- **5,268 duplicate rows** removed (extra copies of 4,879 repeated lines), so 541,909 − 5,268 = 536,641.
 - **38 → 36 countries** after standardising naming (`EIRE` → `Ireland`) and excluding non-country placeholders (`Unspecified`, `European Community`).
 
 Full detail and reasoning: [`docs/data_quality_checklist.md`](docs/data_quality_checklist.md).
@@ -68,7 +68,7 @@ This produces `data/retail.db`. Export each star-schema table to CSV for Power B
 
 ## Data source
 
-[UCI Machine Learning Repository — Online Retail](https://archive.ics.uci.edu/dataset/502/online+retail+ii): real transaction data from a UK-based online retailer selling mainly unique all-occasion gifts, December 2010 – December 2011.
+[UCI Machine Learning Repository — Online Retail](https://archive.ics.uci.edu/dataset/352/online+retail): real transaction data from a UK-based online retailer selling mainly unique all-occasion gifts, December 2010 – December 2011 (541,909 rows). The raw file is not stored in this repo. Download it (a CSV copy is at https://raw.githubusercontent.com/databricks/Spark-The-Definitive-Guide/master/data/retail-data/all/online-retail-dataset.csv) and save it as `raw/online-retail-dataset.csv` before running `scripts/load_raw.py`.
 
 ## Author
 
