@@ -1,0 +1,5 @@
+raw/
+data/*.db
+data/star_schema/
+__pycache__/
+*.pyc
