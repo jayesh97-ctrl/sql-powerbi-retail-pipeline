@@ -10,7 +10,7 @@ An end-to-end data pipeline that takes a real, messy transaction-level dataset f
 ![Products](images/products.png)
 ![Customers](images/customers.png)
 
-The Power BI report is in `powerbi/retail_dashboard.pbix`. Open it with Power BI Desktop
+The Power BI report is in `powerbi/retail_dashboard.pbix`. Open it with Power BI Desktop.
 
 ## The pipeline
 
@@ -52,6 +52,8 @@ data/star_schema/*.csv  →  Power BI (see docs/powerbi_setup_guide.md)
 - **9,288 rows** were cancellations (`InvoiceNo` starting with `C`) — flagged, not deleted, since a return is a real business event.
 - **~2,900 rows** were postage/fees/adjustments (`POST`, `DOT`, `BANK CHARGES`, etc.) mixed into the product column — flagged so they don't appear as a "top-selling SKU" by volume alone.
 - **5,268 duplicate rows** removed (extra copies of 4,879 repeated lines), so 541,909 − 5,268 = 536,641.
+- **112 product codes** appeared twice with spellings that differ only by upper and lower case (for example '15056BL' and '15056bl'). SQLite treats these as different codes but Power BI does not, so the codes were converted to uppercase in Power Query building the product relationship.
+- **1 manual adjustment row** (code 'm', £2.55) was not caught by the adjustment flag because the SQL code lists is case sensitive. It is excluded on the Products page of the Power BI report with a page filter, and making the SQL match case insensitive is planned fix.
 - **38 → 36 countries** after standardising naming (`EIRE` → `Ireland`) and excluding non-country placeholders (`Unspecified`, `European Community`).
 
 Full detail and reasoning: [`docs/data_quality_checklist.md`](docs/data_quality_checklist.md).
