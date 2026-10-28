@@ -4,6 +4,14 @@ An end-to-end data pipeline that takes a real, messy transaction-level dataset f
 
 **Why this project:** built to demonstrate the exact combination a Data Analyst / BI role actually needs day to day — extracting and validating data from a messy source, designing a reporting-friendly data model, and writing the DAX that makes a dashboard trustworthy rather than just colourful.
 
+## Dashboard preview
+
+![Overview](images/overview.png)
+![Products](images/products.png)
+![Customers](images/customers.png)
+
+The Power BI report is in `powerbi/retail_dashboard.pbix`. Open it with Power BI Desktop
+
 ## The pipeline
 
 ```
