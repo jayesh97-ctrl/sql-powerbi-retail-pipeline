@@ -51,17 +51,17 @@ data/star_schema/*.csv  →  Power BI (see docs/powerbi_setup_guide.md)
 - **135,080 rows (~25%)** had no `CustomerID` — kept and flagged (`is_guest_order`) rather than dropped, since deleting them would understate revenue by a quarter.
 - **9,288 rows** were cancellations (`InvoiceNo` starting with `C`) — flagged, not deleted, since a return is a real business event.
 - **~2,900 rows** were postage/fees/adjustments (`POST`, `DOT`, `BANK CHARGES`, etc.) mixed into the product column — flagged so they don't appear as a "top-selling SKU" by volume alone.
-- **5,268 duplicate rows** removed (extra copies of 5,268 repeated lines), so 541,909 − 5,268 = 536,641.
-- **112 product codes** appeared twice with spellings that differ only by upper and lower case (for example '15056BL' and '15056bl'). SQLite treats these as different codes but Power BI does not, so the codes were converted to uppercase in Power Query before building the product relationship.
-- **1 manual adjustment row** (code 'm', £2.55) was not caught by the adjustment flag because the SQL code list is case sensitive. It is excluded on the Products page of the Power BI report with a page filter, and making the SQL match case insensitive is planned fix.
-- **38 → 36 countries** after standardising naming (`EIRE` → `Ireland`) and excluding non-country placeholders (`Unspecified`, `European Community`).
+- **5,268 duplicate rows** removed (extra copies of 4,879 repeated lines), so 541,909 − 5,268 = 536,641.
+- **112 product codes** appeared twice with spellings that differ only by upper and lower case (for example `15056BL` and `15056bl`). SQLite treats these as different codes but Power BI does not, so the codes were converted to uppercase in Power Query before building the product relationship.
+- **1 manual adjustment row** (code 'm', £2.55) was not caught by the adjustment flag because the SQL code list is case sensitive. It is excluded on the Products page of the Power BI report with a page filter, and making the SQL match case insensitive is the planned fix.
+- **38 → 36 countries** after excluding two non-country placeholders (and standardising EIRE to Ireland).
 
 Full detail and reasoning: [`docs/data_quality_checklist.md`](docs/data_quality_checklist.md).
 
 ## Validation results
 
 - `fact_sales` row count matches the cleaned staging table exactly: **536,641 = 536,641** — nothing lost during modelling.
-- **Zero** orphaned foreign keys across all three dimension joins.
+- **Zero** orphaned foreign keys across all four dimension joins.
 - Total valid-sale revenue: **£10,258,969.74**, ~85% from the United Kingdom — the expected result for a UK-based retailer, used here as the final sanity check.
 
 ## Reproducing this locally
